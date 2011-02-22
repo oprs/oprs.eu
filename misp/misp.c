@@ -93,6 +93,11 @@ static const char *special[64] = {
    "(xxx #x@w)",       "(xxx #x@w)",       "(xxx #x@w)",       "(xxx #x@w)"
 };
 
+static const char *opcode_move = "(move @d @s)";
+static const char *opcode_nop  = "(nop)";
+static const char *opcode_b    = "(b @o)";
+
+
 static const char *reg[32] = {
    "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
    "t0",   "t1", "t2", "t3", "t4", "t5", "t6", "t7",
@@ -128,16 +133,15 @@ mips_format( const char *x, unsigned w )
          ++x;
          switch( *x ) {
 
-            case 'a': i += sprintf( &str[i], "%d", (w>>6)&0x1f ); break;
-            case 'd': i += sprintf( &str[i], "%s", reg[(w>>11)&0x1f] ); break;
-            case 'i': i += sprintf( &str[i], "%d", (short)(w&0xffff) ); break;
+            case 'a': i += sprintf( &str[i], "%d",   (w>>6)&0x1f       ); break;
+            case 'd': i += sprintf( &str[i], "%s",   reg[(w>>11)&0x1f] ); break;
+            case 'i': i += sprintf( &str[i], "%d",   (short)(w&0xffff) ); break;
             case 'x': i += sprintf( &str[i], "#x%x", (short)(w&0xffff) ); break;
-            case 'o': i += sprintf( &str[i], "%d", (short)(w&0xffff) ); break;
-//            case 'O': i += sprintf( &str[i], "#x%x", (short)((w&0xffff)<<2)+4 ); break;
+            case 'o': i += sprintf( &str[i], "%d",   (short)(w&0xffff) ); break;
             case 'b':
-            case 's': i += sprintf( &str[i], "%s", reg[(w>>21)&0x1f] ); break;
-            case 't': i += sprintf( &str[i], "%s", reg[(w>>16)&0x1f] ); break;
-            case 'w': i += sprintf( &str[i], "%x", w ); break;
+            case 's': i += sprintf( &str[i], "%s",   reg[(w>>21)&0x1f] ); break;
+            case 't': i += sprintf( &str[i], "%s",   reg[(w>>16)&0x1f] ); break;
+            case 'w': i += sprintf( &str[i], "%x",   w                 ); break;
             case '@': str[i++] = '@'; break;
 
             default:
@@ -170,14 +174,14 @@ mips_disassemble( unsigned char *x, unsigned len )
       switch( op ) {
          case 0x00:
             if( w == 0 ) {
-               (void)printf( "(nop)" );
+               (void)printf( opcode_nop );
             } else {
                sp = w & 0x3f;
                switch( sp ) {
 
                case 0x21: /* addu */
                   if( ((w>>16) & 0x1f) == 0 ) {
-                     (void)printf( "%s", mips_format( "(move @d @s)", w ));
+                     (void)printf( "%s", mips_format( opcode_move, w ));
                      break;
                   }
                   /*FALLTHROUGH*/
@@ -190,8 +194,8 @@ mips_disassemble( unsigned char *x, unsigned len )
             break;
 
          case 0x04: /* beq */
-            if( ((w>>16)&0x3ff) == 0 ) {
-               (void)printf( "%s", mips_format( "(b @o)", w ));
+            if( ((w>>16) & 0x3ff) == 0 ) {
+               (void)printf( "%s", mips_format( opcode_b, w ));
                break;
             }
             /*FALLTHROUGH*/
