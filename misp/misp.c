@@ -106,18 +106,29 @@ static const char *reg[32] = {
 };
 
 
-static const char *stype[16] = {
-   "NOTYPE",  "OBJECT",  "FUNCTION", "SECTION",
-   "FILE",    "UNKNOWN", "UNKNOWN",  "UNKNOWN",
-   "UNKNOWN", "UNKNOWN", "UNKNOWN",  "UNKNOWN",
-   "UNKNOWN", "LOPROC",  "UNKNOWN",  "HIPROC"
+/* section types */
+static const char *stype[SHT_NUM] = {
+   "NULL         ", "PROGBITS     ", "SYMTAB       ", "STRTAB       ",
+   "RELA         ", "HASH         ", "DYNAMIC      ", "NOTE         ",
+   "NOBITS       ", "REL          ", "SHLIB        ", "DYNSYM       ",
+   "UNKNOWN      ", "UNKNOWN      ", "INIT_ARRAY   ", "FINI_ARRAY   ",
+   "PREINIT_ARRAY", "GROUP        ", "SYMTAB_SHNDX "
 };
 
+/* symbol types */
+static const char *ytype[16] = {
+   "NOTYPE  ", "OBJECT  ", "FUNCTION", "SECTION ",
+   "FILE    ", "UNKNOWN ", "UNKNOWN ", "UNKNOWN ",
+   "UNKNOWN ", "UNKNOWN ", "UNKNOWN ", "UNKNOWN ",
+   "UNKNOWN ", "LOPROC  ", "UNKNOWN ", "HIPROC  "
+};
+
+/* symbol binding types */
 static const char *btype[16] = {
-   "LOCAL",   "GLOBAL",  "WEAK",    "UNKNOWN",
+   "LOCAL  ", "GLOBAL ", "WEAK   ", "UNKNOWN",
    "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN",
    "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN",
-   "UNKNOWN", "LOPROC",  "UNKNOWN", "HIPROC"
+   "UNKNOWN", "LOPROC ", "UNKNOWN", "HIPROC "
 };
 
 
@@ -205,7 +216,7 @@ mips_disassemble( unsigned char *x, unsigned len )
             break;
       }
    }
-   (void)printf( ")\n" );
+   (void)printf( ")\n\n" );
 }
 
 
@@ -221,7 +232,7 @@ symtab_dump( unsigned char *x, unsigned len, unsigned char *strt )
       (void)printf( "  % 3i: %s %s %08x %u %u \"%s\"\n",
                      i,
                      btype[ELF32_ST_BIND(sym->st_info)],
-                     stype[ELF32_ST_TYPE(sym->st_info)],
+                     ytype[ELF32_ST_TYPE(sym->st_info)],
                      sym->st_value,
                      sym->st_size,
                      sym->st_shndx,
@@ -273,7 +284,14 @@ main( int argc, char *argv[] )
    (void)printf( "\n" );
 
    shdr = (Elf32_Shdr*)(x+ehdr->e_shoff);
-   for( i = ehdr->e_shnum ; i > 0 ; --i ) {
+   for( i = 0 ; i < ehdr->e_shnum ; ++i ) {
+
+      (void)printf( "section #%02i: type: %s flags: %08x, offset: %08x, size: %u\n",
+                    i,
+                    shdr->sh_type < SHT_NUM ? stype[shdr->sh_type] : "UNKNOWN      ",
+                    shdr->sh_flags,
+                    shdr->sh_offset,
+                    shdr->sh_size );
 
       switch( shdr->sh_type ) {
 
@@ -283,16 +301,16 @@ main( int argc, char *argv[] )
             break;
 
          case SHT_SYMTAB:
+         case SHT_DYNSYM:
             {
                (void)printf( "\nSYMBOLS:\n" );
                Elf32_Shdr *strt = (Elf32_Shdr*)(x + ehdr->e_shoff + shdr->sh_link*sizeof(Elf32_Shdr));
                symtab_dump( x+shdr->sh_offset, shdr->sh_size, x+strt->sh_offset );
+               (void)printf( "\n" );
             }
             break;
 
          default:
-            (void)printf( "sh_type: [%08x], sh_flags: %08x, sh_offset: %08x +%u\n",
-                          shdr->sh_type, shdr->sh_flags, shdr->sh_offset, shdr->sh_size );
             break;
 
       }
