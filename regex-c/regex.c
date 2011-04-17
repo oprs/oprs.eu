@@ -1,40 +1,70 @@
 
+#include <stdio.h>
+
 #include "regex.h"
 
-#define cons se_atom_new
+
+atom_t
+re_seq( atom_t a0, atom_t a1 )
+{ return list( RE_TYPE_SEQ, a0, a1, nao ); }
 
 
-se_elem_t
-re_seq( se_elem_t e0, se_elem_t e1 )
-{ return cons( RE_TYPE_SEQ, cons( e0, cons( e1, SE_NIL ))); }
+atom_t
+re_alt( atom_t a0, atom_t a1 )
+{ return list( RE_TYPE_ALT, a0, a1, nao ); }
 
 
-se_elem_t
-re_alt( se_elem_t e0, se_elem_t e1 )
-{ return cons( RE_TYPE_ALT, cons( e0, cons( e1, SE_NIL ))); }
+atom_t
+re_rep( atom_t atom )
+{ return list( RE_TYPE_REP, atom, nao ); }
 
 
-se_elem_t
-re_rep( se_elem_t e )
-{ return cons( RE_TYPE_REP, cons( e, SE_NIL )); }
-
-
-se_elem_t
-re_sym( int sym )
-{ return SE_SYM(sym); }
-
-
-se_elem_t
-re_expr( const char* re )
+atom_t
+re_closure( re_mbuf_t* mbuf, atom_t atom )
 {
-   se_elem_t e;
+   int c = MBUF_PEEK( mbuf );
 
-   if( !re || !re[0] )
-      return SE_NIL;
+   switch( c ) {
+      case '?': (void)MBUF_PULL( mbuf ); return re_alt( atom, t );
+      case '*': (void)MBUF_PULL( mbuf ); return re_rep( atom );
+      case '+': (void)MBUF_PULL( mbuf ); return re_seq( atom, re_rep( atom ));
+      default : break;
+   }
 
-   e = cons( RE_TYPE_SEQ, cons( re_sym(re[0]), SE_NIL ) );
-
-   return e;
+   return atom;
 }
+
+
+atom_t
+re_expr( re_mbuf_t* mbuf )
+{
+   atom_t atom;
+   int c = MBUF_PULL( mbuf );
+
+/* first character */
+
+   switch( c ) {
+      case 0  :
+      case ')': return nil;
+      default: atom = ATOM_CHAR(c);
+   }
+
+/* subsequent characters */
+
+   c = MBUF_PULL( mbuf );
+
+   while( c && c != ')' ) {
+      switch( c ) {
+         case '|': atom = re_alt( atom, re_closure( mbuf, re_expr( mbuf ) ));
+         case '(': atom = re_seq( atom, re_closure( mbuf, re_expr( mbuf ) ));
+         case '.': atom = re_seq( atom, re_closure( mbuf, RE_TYPE_ANY     ));
+         default : atom = re_seq( atom, re_closure( mbuf, ATOM_CHAR(c)    ));
+      }
+      c = MBUF_PULL( mbuf );
+   }
+
+   return atom;
+}
+
 
 /*EoF*/

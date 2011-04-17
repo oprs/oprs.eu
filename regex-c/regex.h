@@ -1,8 +1,8 @@
 
-#ifndef _CLEP_REGEX_H
-#define _CLEP_REGEX_H
+#ifndef _EU_OPRS_REGEX_H
+#define _EU_OPRS_REGEX_H
 
-#include "s-expr.h"
+#include "lisp.h"
 
 
 #define SEQ( e0, e1 ) re_seq( e0, e1 )
@@ -10,19 +10,32 @@
 #define REP( e0 )     re_rep( e0 )
 #define SYM( e0 )     re_sym( e0 )
 
-#define RE_TYPE_SEQ  SE_SYM(0x100)
-#define RE_TYPE_ALT  SE_SYM(0x101)
-#define RE_TYPE_REP  SE_SYM(0x102)
+#define RE_TYPE_SEQ ATOM_SYM(0)
+#define RE_TYPE_ALT ATOM_SYM(1)
+#define RE_TYPE_REP ATOM_SYM(2)
+#define RE_TYPE_ANY ATOM_SYM(3)
 
 
-extern se_elem_t re_seq( se_elem_t latom, se_elem_t ratom );
-extern se_elem_t re_alt( se_elem_t latom, se_elem_t ratom );
-extern se_elem_t re_rep( se_elem_t latom );
-extern se_elem_t re_sym( int sym );
+struct re_mbuf {
+   const char *x;
+   int         i;
+};
 
-extern se_elem_t re_expr( const char* re );
+typedef struct re_mbuf re_mbuf_t;
+
+#define MBUF_PULL( m ) ((m)->x[((m)->i)++])
+#define MBUF_PEEK( m ) ((m)->x[ (m)->i   ])
+
+extern atom_t re_seq( atom_t latom, atom_t ratom );
+extern atom_t re_alt( atom_t latom, atom_t ratom );
+extern atom_t re_rep( atom_t latom );
+extern atom_t re_sym( int sym );
+
+extern atom_t re_closure( re_mbuf_t* mbuf, atom_t e );
+
+extern atom_t re_expr( re_mbuf_t* mbuf );
 
 
-#endif /*_CLEP_REGEX_H*/
+#endif /*_EU_OPRS_REGEX_H*/
 
 /*EoF*/

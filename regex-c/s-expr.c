@@ -6,8 +6,8 @@
 
 
 se_atom_t se_atom_nil = {
-   .car.ptr = (se_atom_t*)0,
-   .cdr.ptr = (se_atom_t*)0
+   .car.x = 0,
+   .cdr.x = 0
 };
 
 
@@ -26,8 +26,8 @@ void
 se_atom_free( se_atom_t* atom )
 {
    if( atom ) {
-      if( atom->car.sym.tag == SE_TAG_PTR ) se_atom_free( atom->car.ptr );
-      if( atom->cdr.sym.tag == SE_TAG_PTR ) se_atom_free( atom->cdr.ptr );
+      if( atom->car.sym.tag == SE_TAG_PTR ) se_atom_free( atom->car.atom );
+      if( atom->cdr.sym.tag == SE_TAG_PTR ) se_atom_free( atom->cdr.atom );
       (void)free( atom );
    }
 }
@@ -39,16 +39,16 @@ se_elem_dump_r( se_elem_t elem )
    switch( elem.x & 0x03 )
    {
       case 0:
-         if( elem.ptr ) {
+         if( elem.atom ) {
             (void)printf( "( " );
-            se_elem_dump_r( elem.ptr->car );
+            se_elem_dump_r( elem.atom->car );
             (void)printf( ") " );
-            se_elem_dump_r( elem.ptr->cdr );
+            se_elem_dump_r( elem.atom->cdr );
          }
          break;
 
       default:
-         (void)printf( "%d ", elem.sym.val );
+         (void)printf( "%u ", elem.sym.val );
    }
 }
 
