@@ -3,7 +3,7 @@ CFLAGS = -g -Wall -Wstrict-prototypes
 LDFLAGS = 
 CC = gcc
 
-OBJ = s-expr.o lisp.o regex.o
+OBJ = lisp.o regex.o
 
 default: test
 
