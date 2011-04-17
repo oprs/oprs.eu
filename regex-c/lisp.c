@@ -1,6 +1,6 @@
 
 /*
-   Copyright (c) 2011, Olivier Piras <github-lisp@oprs.eu>
+   Copyright (c) 2011, Olivier Piras <github-dev@oprs.eu>
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ list_r( atom_t car, va_list ap )
 {
    atom_t cdr = va_arg( ap, atom_t );
 
-   if( cdr.x == nao.x )
+   if( equalp( cdr, nao ) )
       return cons( car, nil );
    else
       return cons( car, list_r( cdr, ap ) );
@@ -95,12 +95,17 @@ cddr( atom_t atom )
 { return cdr( cdr( atom )); }
 
 
+atom_t
+caddr( atom_t atom )
+{ return car( cddr( atom )); }
+
+
 static void
 dump_r( atom_t atom, const char* symtab[] )
 {
    switch( atom.x & TAG_MASK ) {
 
-      case ATYPE_CONS:
+      case ATAG_CONS:
          if( nullp( atom ) ) break;
 
          if( consp( atom.c->car ) ) {
@@ -115,11 +120,11 @@ dump_r( atom_t atom, const char* symtab[] )
          dump_r( atom.c->cdr, symtab );
          break;
 
-      case ATYPE_INT:
+      case ATAG_INT:
          (void)printf( "%d", atom.x >> TAG_SHIFT );
          break;
 
-      case ATYPE_SYM:
+      case ATAG_SYM:
       {
          unsigned sym = atom.x >> TAG_SHIFT;
 
@@ -138,9 +143,12 @@ dump_r( atom_t atom, const char* symtab[] )
          break;
       }
 
-      case ATYPE_CHAR:
-//         (void)printf( "#\\%c", atom.x >> TAG_SHIFT );
+      case ATAG_CHAR:
+#ifdef LISP_DUMP_AS_C
          (void)printf( "'%c'", atom.x >> TAG_SHIFT );
+#else
+         (void)printf( "#\\%c", atom.x >> TAG_SHIFT );
+#endif
          break;
 
       default:
@@ -153,7 +161,7 @@ dump_r( atom_t atom, const char* symtab[] )
 void
 dump( atom_t atom, const char* symtab[] )
 {
-   if( (atom.x & TAG_MASK) == ATYPE_CONS ) {
+   if( consp( atom ) ) {
       (void)printf( "(" );
       dump_r( atom, symtab );
       (void)printf( ")\n" );

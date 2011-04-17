@@ -1,9 +1,9 @@
 
-CFLAGS = -g -Wall -Wstrict-prototypes
+CFLAGS = -g -Wall -Wstrict-prototypes -DLISP_DUMP_AS_C
 LDFLAGS = 
 CC = gcc
 
-OBJ = lisp.o regex.o
+OBJ = lisp.o regex.o brzozowski.o
 
 default: test
 
