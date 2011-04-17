@@ -1,6 +1,6 @@
 
 /*
-   Copyright (c) 2011, Olivier Piras <github-dev@oprs.eu>
+   Copyright (c) 2011, Olivier Piras <github@oprs.eu>
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
