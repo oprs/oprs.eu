@@ -37,8 +37,8 @@
 #define ATOM_CHAR(v) ((atom_t)( (((unsigned)(v)) << TAG_SHIFT) | ATYPE_CHAR ))
 
 #define nil ((atom_t)0)
-#define nao ATOM_SYM(-1)  /* Not An Atom: sentinel value */
-#define t   ATOM_SYM(-2)
+#define nao ATOM_SYM(0x1000000)  /* Not An Atom: sentinel value */
+#define t   ATOM_SYM(0x1000001)
 
 
 enum { ATYPE_CONS, ATYPE_INT, ATYPE_SYM, ATYPE_CHAR };

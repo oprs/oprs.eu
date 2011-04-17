@@ -5,15 +5,10 @@
 #include "lisp.h"
 
 
-#define SEQ( e0, e1 ) re_seq( e0, e1 )
-#define ALT( e0, e1 ) re_alt( e0, e1 )
-#define REP( e0 )     re_rep( e0 )
-#define SYM( e0 )     re_sym( e0 )
-
-#define RE_TYPE_SEQ ATOM_SYM(0)
-#define RE_TYPE_ALT ATOM_SYM(1)
-#define RE_TYPE_REP ATOM_SYM(2)
-#define RE_TYPE_ANY ATOM_SYM(3)
+#define RE_SYM_SEQ ATOM_SYM(0)
+#define RE_SYM_ALT ATOM_SYM(1)
+#define RE_SYM_REP ATOM_SYM(2)
+#define RE_SYM_ANY ATOM_SYM(3)
 
 
 struct re_mbuf {

@@ -120,11 +120,23 @@ dump_r( atom_t atom, const char* symtab[] )
          break;
 
       case ATYPE_SYM:
-         if( symtab )
-            (void)printf( "%s", symtab[atom.x >> TAG_SHIFT] );
-         else
-            (void)printf( "sym#%d", atom.x >> TAG_SHIFT );
+      {
+         unsigned sym = atom.x >> TAG_SHIFT;
+
+         switch( sym ) {
+
+            case 0x1000000: (void)printf( "NaO" ); break;
+            case 0x1000001: (void)printf( "T"   ); break;
+
+            default:
+               if( symtab )
+                  (void)printf( "%s", symtab[sym] );
+               else
+                  (void)printf( "sym#%d", sym );
+         }
+
          break;
+      }
 
       case ATYPE_CHAR:
 //         (void)printf( "#\\%c", atom.x >> TAG_SHIFT );
