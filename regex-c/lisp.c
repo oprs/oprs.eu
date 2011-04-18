@@ -144,12 +144,22 @@ dump_r( atom_t atom, const char* symtab[] )
       }
 
       case ATAG_CHAR:
+      {
+         int c = atom.x >> TAG_SHIFT;
+
+         if( (c >= 32) && (c < 0x80) ) {
 #ifdef LISP_DUMP_AS_C
-         (void)printf( "'%c'", atom.x >> TAG_SHIFT );
+            (void)printf( "'%c'", c );
+         } else {
+            (void)printf( "'\\x%02x'", c );
 #else
-         (void)printf( "#\\%c", atom.x >> TAG_SHIFT );
+            (void)printf( "#\\%c", c );
+         } else {
+            (void)printf( "#x%02x", c );
 #endif
+         }
          break;
+      }
 
       default:
          (void)fprintf( stderr, "unknown atom type\n" );

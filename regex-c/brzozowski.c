@@ -51,21 +51,21 @@ brz_is_nullable( atom_t atom )
 
 
 atom_t
-brz_derive( atom_t atom, int c )
+brz_deriv( atom_t atom, int c )
 {
    if( characterp(atom) )
       return PREDICATE( equalp(atom, ATOM_CHAR(c)) );
 
    if( re_is_rep(atom) )
-      return re_seq( brz_derive(cadr(atom), c), re_rep(cadr(atom)) );
+      return re_seq( brz_deriv(cadr(atom), c), re_rep(cadr(atom)) );
 
    if( re_is_alt(atom) )
-      return re_alt( brz_derive(cadr(atom), c), brz_derive(caddr(atom), c) );
+      return re_alt( brz_deriv(cadr(atom), c), brz_deriv(caddr(atom), c) );
 
    if( re_is_seq(atom) )
       return re_alt(
-         re_seq( brz_derive(cadr(atom), c), caddr(atom) ),
-         re_seq( PREDICATE(brz_is_nullable(cadr(atom))), brz_derive(caddr(atom), c) ));
+         re_seq( brz_deriv(cadr(atom), c), caddr(atom) ),
+         re_seq( PREDICATE(brz_is_nullable(cadr(atom))), brz_deriv(caddr(atom), c) ));
 
    return PREDICATE( re_is_any(atom) );
 }

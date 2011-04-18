@@ -32,7 +32,7 @@
 
 
 extern int    brz_is_nullable( atom_t atom );
-extern atom_t brz_derive( atom_t atom, int c );
+extern atom_t brz_deriv( atom_t atom, int c );
 
 
 #endif /*_EU_OPRS_BRZOZOWSKI_H*/

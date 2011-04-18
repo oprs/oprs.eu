@@ -61,39 +61,77 @@ re_closure( re_mbuf_t* mbuf, atom_t atom )
    int c = MBUF_PEEK( mbuf );
 
    switch( c ) {
-      case '?': (void)MBUF_PULL( mbuf ); return re_alt( atom, t );
-      case '*': (void)MBUF_PULL( mbuf ); return re_rep( atom );
-      case '+': (void)MBUF_PULL( mbuf ); return re_seq( atom, re_rep( atom ));
+      case '?': MBUF_SKIP( mbuf ); return re_alt( atom, t );
+      case '*': MBUF_SKIP( mbuf ); return re_rep( atom );
+      case '+': MBUF_SKIP( mbuf ); return re_seq( atom, re_rep( atom ));
       default : break;
    }
 
    return atom;
 }
 
-static atom_t
-re_expr_r( re_mbuf_t* mbuf, int pl )
+
+atom_t
+re_quoted( re_mbuf_t* mbuf )
 {
    atom_t atom;
    int c = MBUF_PULL( mbuf );
 
-/* first character */
+   switch( c ) {
+      case '\0': return nil;
+      case '\\': atom = ATOM_CHAR(  '\\'  ); break;  /* backslash */
+      case '0' : atom = ATOM_CHAR( '\x00' ); break;  /* null      */
+      case 'a' : atom = ATOM_CHAR( '\x07' ); break;  /* bell      */
+      case 'b' : atom = ATOM_CHAR( '\x08' ); break;  /* backspace */
+      case 't' : atom = ATOM_CHAR( '\x09' ); break;  /* tab       */
+      case 'n' : atom = ATOM_CHAR( '\x0a' ); break;  /* newline   */
+      case 'v' : atom = ATOM_CHAR( '\x0b' ); break;  /* vtab      */
+      case 'f' : atom = ATOM_CHAR( '\x0c' ); break;  /* page      */
+      case 'r' : atom = ATOM_CHAR( '\x0d' ); break;  /* return    */
+      default  : atom = re_seq( ATOM_CHAR( '\\' ), ATOM_CHAR( c ) );
+   }
+
+   return atom;
+}
+
+static atom_t re_expr_r( re_mbuf_t* mbuf, int pl );
+
+atom_t
+re_unit( re_mbuf_t* mbuf )
+{
+   atom_t atom;
+   int c = MBUF_PULL( mbuf );
 
    switch( c ) {
-      case 0  : return nil;
-      case ')': return nil;
-      default : atom = re_closure( mbuf, ATOM_CHAR(c) );
+      case '\0': return nil;
+      case '\\': atom = re_quoted( mbuf )    ; break;
+      case '(' : atom = re_expr_r( mbuf, 1 ) ; break;
+      case '.' : atom = RE_SYM_ANY           ; break;
+      default  : atom = ATOM_CHAR(c)         ; break;
    }
+
+   return re_closure( mbuf, atom );
+}
+
+
+static atom_t
+re_expr_r( re_mbuf_t* mbuf, int pl )
+{
+/* first character */
+
+   atom_t atom = re_unit( mbuf );
 
 /* subsequent characters */
 
-   c = MBUF_PULL( mbuf );
+   int c = MBUF_PULL( mbuf );
 
-   while( c && c != ')' ) {
+   while( c && (c != ')') ) {
       switch( c ) {
-         case '|': atom = re_alt( atom, re_closure( mbuf, re_expr_r( mbuf, pl   ) )); break;
-         case '(': atom = re_seq( atom, re_closure( mbuf, re_expr_r( mbuf, pl+1 ) )); break;
-         case '.': atom = re_seq( atom, re_closure( mbuf, RE_SYM_ANY              )); break;
-         default : atom = re_seq( atom, re_closure( mbuf, ATOM_CHAR(c)            )); break;
+         case '\\': atom = re_seq( atom, re_closure( mbuf, re_quoted( mbuf )       )); break;
+         case '|' : atom = re_alt( atom, re_closure( mbuf, re_expr_r( mbuf, pl )   )); break;
+         case '(' : atom = re_seq( atom, re_closure( mbuf, re_expr_r( mbuf, pl+1 ) )); break;
+         case '.' : atom = re_seq( atom, re_closure( mbuf, RE_SYM_ANY              )); break;
+         default  : atom = re_seq( atom, re_closure( mbuf, ATOM_CHAR(c)            )); break;
       }
       c = MBUF_PULL( mbuf );
    }
