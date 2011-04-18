@@ -59,7 +59,6 @@ extern atom_t re_alt( atom_t latom, atom_t ratom );
 extern atom_t re_rep( atom_t latom );
 
 extern atom_t re_closure( re_mbuf_t* mbuf, atom_t e );
-extern atom_t re_unit( re_mbuf_t* mbuf );
 extern atom_t re_expr( re_mbuf_t* mbuf );
 
 extern void re_dump( atom_t atom );

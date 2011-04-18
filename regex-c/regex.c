@@ -94,50 +94,36 @@ re_quoted( re_mbuf_t* mbuf )
    return atom;
 }
 
-static atom_t re_expr_r( re_mbuf_t* mbuf, int pl );
-
-atom_t
-re_unit( re_mbuf_t* mbuf )
-{
-   atom_t atom;
-   int c = MBUF_PULL( mbuf );
-
-   switch( c ) {
-      case '\0': return nil;
-      case '\\': atom = re_quoted( mbuf )    ; break;
-      case '(' : atom = re_expr_r( mbuf, 1 ) ; break;
-      case '.' : atom = RE_SYM_ANY           ; break;
-      default  : atom = ATOM_CHAR(c)         ; break;
-   }
-
-   return re_closure( mbuf, atom );
-}
-
 
 static atom_t
-re_expr_r( re_mbuf_t* mbuf, int pl )
+re_expr_r( re_mbuf_t* mbuf, int is_sub )
 {
-/* first character */
+   atom_t atom = t;
+   int c = MBUF_PEEK( mbuf );
 
-   atom_t atom = re_unit( mbuf );
+   while( c ) {
 
-/* subsequent characters */
-
-   int c = MBUF_PULL( mbuf );
-
-   while( c && (c != ')') ) {
-      switch( c ) {
-         case '\\': atom = re_seq( atom, re_closure( mbuf, re_quoted( mbuf )       )); break;
-         case '|' : atom = re_alt( atom, re_closure( mbuf, re_expr_r( mbuf, pl )   )); break;
-         case '(' : atom = re_seq( atom, re_closure( mbuf, re_expr_r( mbuf, pl+1 ) )); break;
-         case '.' : atom = re_seq( atom, re_closure( mbuf, RE_SYM_ANY              )); break;
-         default  : atom = re_seq( atom, re_closure( mbuf, ATOM_CHAR(c)            )); break;
+      if( c == ')' ) {
+         if( is_sub ) MBUF_SKIP( mbuf );
+         break;
       }
-      c = MBUF_PULL( mbuf );
+
+      MBUF_SKIP( mbuf );
+
+      switch( c ) {
+         case '\\': atom = re_seq( atom, re_closure( mbuf, re_quoted( mbuf )    )); break;
+         case '|' : atom = re_alt( atom, re_closure( mbuf, re_expr_r( mbuf, 0 ) )); break;
+         case '(' : atom = re_seq( atom, re_closure( mbuf, re_expr_r( mbuf, 1 ) )); break;
+         case '.' : atom = re_seq( atom, re_closure( mbuf, RE_SYM_ANY           )); break;
+         default  : atom = re_seq( atom, re_closure( mbuf, ATOM_CHAR(c)         )); break;
+      }
+
+      c = MBUF_PEEK( mbuf );
    }
 
    return atom;
 }
+
 
 atom_t
 re_expr( re_mbuf_t* mbuf )
