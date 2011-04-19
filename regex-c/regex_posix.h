@@ -25,59 +25,16 @@
 */
 
 
+#ifndef _EU_OPRS_REGEX_POSIX_H
+#define _EU_OPRS_REGEX_POSIX_H
+
 #include "regex.h"
 
 
-atom_t
-re_seq( atom_t a0, atom_t a1 )
-{
-   if( nullp( a0 ) || nullp( a1 ) ) return nil;
-   if( truep( a0 ) ) return a1;
-   if( truep( a1 ) ) return a0;
-
-   if( re_is_rep( a0 ) && equalp( cadr(a0), a1 ) )
-      return list3( RE_SYM_SEQ, a1, a0 );
-
-   return list3( RE_SYM_SEQ, a0, a1 );
-}
+extern atom_t re_posix_parse( re_mbuf_t* mbuf );
+extern void   re_posix_dump( atom_t atom );
 
 
-atom_t
-re_alt( atom_t a0, atom_t a1 )
-{
-   if( nullp( a0 ) ) return a1;
-   if( nullp( a1 ) ) return a0;
-
-   if( equalp( a0, a1) )
-      return( a0 );
-
-   if( ((a0.x & TAG_MASK) == (a1.x & TAG_MASK))
-    && ( a0.x > a1.x ) )
-      return list3( RE_SYM_ALT, a1, a0 );
-
-   return list3( RE_SYM_ALT, a0, a1 );
-}
-
-
-atom_t
-re_rep( atom_t atom )
-{
-   if( nullp( atom ) || truep( atom ) ) return t;
-   return list2( RE_SYM_REP, atom );
-}
-
-
-int
-re_is_equiv( atom_t a0, atom_t a1 )
-{ return( equalp( a0, a1 ) ); }
-
-
-void
-re_dump( atom_t atom )
-{
-   const char* symtab[] = { "SEQ", "ALT", "REP", "ANY" };
-   dump( atom, symtab );
-}
-
+#endif /*_EU_OPRS_REGEX_POSIX_H*/
 
 /*EoF*/

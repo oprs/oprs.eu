@@ -100,6 +100,20 @@ caddr( atom_t atom )
 { return car( cddr( atom )); }
 
 
+int
+equalp( atom_t a0, atom_t a1 )
+{
+   if( (a0.x & TAG_MASK) != (a1.x & TAG_MASK) )
+      return 0;
+
+   if( consp( a0 ) ) // a1 always a cons due to test above
+      return( equalp( car(a0),  car(a1)  )
+           && equalp( cadr(a0), cadr(a1) ));
+
+   return( a0.x == a1.x );
+}
+
+
 static void
 dump_r( atom_t atom, const char* symtab[] )
 {

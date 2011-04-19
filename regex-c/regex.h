@@ -54,12 +54,11 @@ static inline int re_is_alt( atom_t atom ) { return consp(atom) && equalp( car(a
 static inline int re_is_seq( atom_t atom ) { return consp(atom) && equalp( car(atom), RE_SYM_SEQ ); }
 static inline int re_is_rep( atom_t atom ) { return consp(atom) && equalp( car(atom), RE_SYM_REP ); }
 
+extern int re_is_equiv( atom_t a0, atom_t a1 );
+
 extern atom_t re_seq( atom_t latom, atom_t ratom );
 extern atom_t re_alt( atom_t latom, atom_t ratom );
 extern atom_t re_rep( atom_t latom );
-
-extern atom_t re_closure( re_mbuf_t* mbuf, atom_t e );
-extern atom_t re_expr( re_mbuf_t* mbuf );
 
 extern void re_dump( atom_t atom );
 

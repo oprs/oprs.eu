@@ -64,10 +64,20 @@ static inline int consp( atom_t atom )      { return (atom.x && ((atom.x & TAG_M
 static inline int symbolp( atom_t atom )    { return (atom.x & TAG_MASK) == ATAG_SYM;  }
 static inline int integerp( atom_t atom )   { return (atom.x & TAG_MASK) == ATAG_INT;  }
 static inline int characterp( atom_t atom ) { return (atom.x & TAG_MASK) == ATAG_CHAR; }
-static inline int equalp( atom_t a0, atom_t a1 ) { return a0.x == a1.x; }
+
+extern int equalp( atom_t a0, atom_t a1 );
 
 extern atom_t cons( atom_t car, atom_t cdr );
 extern atom_t list( atom_t car, ... );
+
+static inline atom_t list2( atom_t a0, atom_t a1 )
+{ return cons( a0, cons( a1, nil )); }
+
+static inline atom_t list3( atom_t a0, atom_t a1, atom_t a2 )
+{ return cons( a0, cons( a1, cons( a2, nil ))); }
+
+#define cons_free( atom )
+#define list_free( atom )
 
 extern atom_t car( atom_t atom );
 extern atom_t cdr( atom_t atom );
