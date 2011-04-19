@@ -34,9 +34,9 @@ re_posix_closure( re_mbuf_t* mbuf, atom_t atom )
    int c = MBUF_PEEK( mbuf );
 
    switch( c ) {
-      case '?': MBUF_SKIP( mbuf ); return re_alt( atom, t );
-      case '*': MBUF_SKIP( mbuf ); return re_rep( atom );
-      case '+': MBUF_SKIP( mbuf ); return re_seq( atom, re_rep( atom ));
+      case '?': MBUF_SKIP( mbuf ); return re_posix_closure( mbuf, re_alt( atom, t )             );
+      case '*': MBUF_SKIP( mbuf ); return re_posix_closure( mbuf, re_rep( atom )                );
+      case '+': MBUF_SKIP( mbuf ); return re_posix_closure( mbuf, re_seq( atom, re_rep( atom )) );
       default : break;
    }
 

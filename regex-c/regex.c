@@ -36,11 +36,8 @@ re_seq( atom_t a0, atom_t a1 )
    if( truep( a1 ) ) return a0;
 
    if( re_is_rep( a0 ) ) {
-      if( equalp( a0, a1 ) )
-         return a0;
-
-      if( equalp( cadr(a0), a1 ) )
-         return re_seq( a1, a0 );
+      if( equalp( a0, a1 )       ) return a0;
+      if( equalp( cadr(a0), a1 ) ) return re_seq( a1, a0 );
    }
 
    return list3( RE_SYM_SEQ, a0, a1 );
