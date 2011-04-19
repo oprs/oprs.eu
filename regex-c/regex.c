@@ -63,6 +63,10 @@ atom_t
 re_rep( atom_t atom )
 {
    if( nullp( atom ) || truep( atom ) ) return t;
+
+   if( re_is_rep( atom ) )
+      return re_rep( cadr(atom) );
+
    return list2( RE_SYM_REP, atom );
 }
 
