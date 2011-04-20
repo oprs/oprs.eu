@@ -1,0 +1,5 @@
+equiv a a
+equiv abc abc
+equiv 'a(bc)' '(ab)c'
+equiv 'a|b' 'b|a'
+equiv 'a|(b|c)' '(a|b)|c'
