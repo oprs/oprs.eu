@@ -99,8 +99,11 @@ re_posix_parse_r( re_mbuf_t* mbuf, int is_sub )
 
 
 atom_t
-re_posix_parse( re_mbuf_t* mbuf )
-{ return re_posix_parse_r( mbuf, 0 ); }
+re_posix_parse( char* re )
+{
+   re_mbuf_t mbuf = { re, 0 };
+   return re_posix_parse_r( &mbuf, 0 );
+}
 
 
 /*EoF*/

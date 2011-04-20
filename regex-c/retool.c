@@ -30,17 +30,7 @@ cmd_equiv( int argc, char* argv[] )
       return 1;
    }
 
-   re_mbuf_t m;
-
-   m.x = argv[1];
-   m.i = 0;
-   atom_t a0 = re_posix_parse( &m );
-
-   m.x = argv[2];
-   m.i = 0;
-   atom_t a1 = re_posix_parse( &m );
-
-   return !re_is_equiv( a0, a1 );
+   return !re_is_equiv( re_posix_parse( argv[1] ), re_posix_parse( argv[2] ) );
 }
 
 
@@ -52,9 +42,7 @@ cmd_dump( int argc, char* argv[] )
       return 1;
    }
 
-   re_mbuf_t m = { argv[1], 0 };
-   atom_t atom = re_posix_parse( &m );
-   re_posix_dump( atom );
+   re_dump( re_posix_parse( argv[1] ) );
 
    return 0;
 }

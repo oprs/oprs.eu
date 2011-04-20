@@ -31,7 +31,7 @@
 #include "regex.h"
 
 
-extern atom_t re_posix_parse( re_mbuf_t* mbuf );
+extern atom_t re_posix_parse( char* re );
 extern void   re_posix_dump( atom_t atom );
 
 
