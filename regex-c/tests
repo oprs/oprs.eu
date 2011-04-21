@@ -1,6 +1,8 @@
 #
 equiv a a
+equiv a (a)
 equiv ab ab
+equiv ab (ab)
 equiv ab (a)b
 equiv ab a(b)
 equiv abc abc
@@ -60,6 +62,10 @@ match a|b b
 match a|b|c a
 match a|b|c b
 match a|b|c c
+match a|bc  a
+match a|bc  bc
+match ab|c  ab
+match ab|c  c
 match (a|b)c ac
 match (a|b)c bc
 match a(b|c) ab

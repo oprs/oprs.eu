@@ -24,19 +24,34 @@
    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#ifndef _EU_OPRS_RETOOL_H
-#define _EU_OPRS_RETOOL_H
-
-
-extern int retool_dump  ( int argc, char* argv[] );
-extern int retool_echo  ( int argc, char* argv[] );
-extern int retool_equiv ( int argc, char* argv[] );
-extern int retool_deriv ( int argc, char* argv[] );
-extern int retool_match ( int argc, char* argv[] );
-extern int retool_dfa   ( int argc, char* argv[] );
+#include "retool.h"
+#include "regex_posix.h"
+#include "brzozowski.h"
 
 
-#endif /*_EU_OPRS_RETOOL_H*/
+int
+retool_dfa( int argc, char* argv[] )
+{
+   if( argc < 3 ) {
+      (void)fprintf( stderr, "usage: dfa regex alphabet\n" );
+      return 1;
+   }
+
+   atom_t atom = re_posix_parse( argv[1] );
+   char *x = argv[2];
+
+   while( *x ) {
+      (void)printf( "'%c': ", *x );
+      re_posix_dump( brz_deriv( atom, *x ) );
+      ++x;
+   }
+
+   return !truep( atom );
+}
+
 
 /*EoF*/
