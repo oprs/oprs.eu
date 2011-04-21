@@ -1,6 +1,34 @@
+#
 equiv a a
+#
 equiv abc abc
-equiv 'a(bc)' '(ab)c'
-equiv 'a|b' 'b|a'
-equiv 'a|(b|c)' '(a|b)|c'
-equiv 'a*' 'a**'
+equiv abc (a)bc
+equiv abc a(b)c
+equiv abc ab(c)
+equiv abc (ab)c
+equiv abc a(bc)
+equiv abc (abc)
+equiv abc (a)(bc)
+equiv abc (ab)(c)
+equiv abcd (ab)cd
+equiv abcd a(bc)d
+equiv abcd ab(cd)
+equiv abcd (abc)d
+equiv abcd a(bcd)
+equiv abcd (ab)(cd)
+equiv abcd a(b(cd))
+equiv abcd ((ab)c)d
+equiv abcd a(b(c(d)))
+equiv abcd (((a)b)c)d
+#
+equiv a|b b|a
+equiv a|b|c a|c|b
+equiv a|b|c b|a|c
+equiv a|b (a|b)
+equiv a|b|c (a|b|c)
+equiv a|b|c (a|b)|c
+equiv a|b|c a|(b|c)
+#
+equiv a* a**
+equiv a* (a)*
+equiv a* (a*)*

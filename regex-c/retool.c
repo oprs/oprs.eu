@@ -55,14 +55,11 @@ main( int argc, char *argv[] )
    }
 
    for( i = 0 ; cv[i].cmd ; ++i )
-      if( !strcmp( cv[i].cmd, argv[1] ) ) break;
+      if( !strcmp( cv[i].cmd, argv[1] ) )
+         return cv[i].cfn( argc-1, argv+1 );
 
-   if( !cv[i].cmd ) {
-      (void)fprintf( stderr, "unknown command \"%s\"\n", argv[1] );
-      exit(1);
-   }
-
-   return cv[i].cfn( argc-1, argv+1 );
+   (void)fprintf( stderr, "unknown command \"%s\"\n", argv[1] );
+   return 1;
 }
 
 
