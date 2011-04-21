@@ -24,17 +24,26 @@
    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#ifndef _EU_OPRS_RETOOL_H
-#define _EU_OPRS_RETOOL_H
-
-
-extern int retool_dump  ( int argc, char* argv[] );
-extern int retool_echo  ( int argc, char* argv[] );
-extern int retool_equiv ( int argc, char* argv[] );
-extern int retool_deriv ( int argc, char* argv[] );
+#include "retool.h"
+#include "regex_posix.h"
 
 
-#endif /*_EU_OPRS_RETOOL_H*/
+int
+retool_echo( int argc, char* argv[] )
+{
+   if( argc < 2 ) {
+      (void)fprintf( stderr, "echo expects 1 argument\n" );
+      return 1;
+   }
+
+   re_posix_dump( re_posix_parse( argv[1] ) );
+
+   return 0;
+}
+
 
 /*EoF*/

@@ -38,8 +38,10 @@ struct cmd_s {
 };
 
 struct cmd_s cv[] = {
-   { "equiv", retool_equiv },
    { "dump",  retool_dump  },
+   { "echo",  retool_echo  },
+   { "equiv", retool_equiv },
+   { "deriv", retool_deriv },
    { 0,       0            }
 };
 
