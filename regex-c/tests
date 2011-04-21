@@ -27,10 +27,16 @@ equiv abcd (((a)b)c)d
 equiv a|b b|a
 equiv a|b|c a|c|b
 equiv a|b|c b|a|c
+equiv a|b|c b|c|a
+equiv a|b|c c|a|b
+equiv a|b|c c|b|a
 equiv a|b (a|b)
 equiv a|b|c (a|b|c)
 equiv a|b|c (a|b)|c
 equiv a|b|c a|(b|c)
+equiv a|bc a|(bc)
+equiv ab|c (ab)|c
+equiv ab|cd (ab)|(cd)
 #
 equiv a* a**
 equiv a* (a)*
