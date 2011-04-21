@@ -27,42 +27,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
 
 #include "retool.h"
-
-
-struct cmd_s {
-   char *cmd;
-   int (*cfn)( int, char* [] );
-};
-
-struct cmd_s cv[] = {
-   { "equiv", retool_equiv },
-   { "dump",  retool_dump  },
-   { 0,       0            }
-};
+#include "regex_posix.h"
 
 
 int
-main( int argc, char *argv[] )
+retool_equiv( int argc, char* argv[] )
 {
-   int i;
-
-   if( argc < 2 ) {
-      (void)fprintf( stderr, "usage: %s command [args...]\n", argv[0] );
-      exit(1);
+   if( argc < 3 ) {
+      (void)fprintf( stderr, "equiv expects 2 arguments\n" );
+      return 1;
    }
 
-   for( i = 0 ; cv[i].cmd ; ++i )
-      if( !strcmp( cv[i].cmd, argv[1] ) ) break;
-
-   if( !cv[i].cmd ) {
-      (void)fprintf( stderr, "unknown command \"%s\"\n", argv[1] );
-      exit(1);
-   }
-
-   return cv[i].cfn( argc-1, argv+1 );
+   return !re_is_equiv(
+      re_posix_parse( argv[1] ),
+      re_posix_parse( argv[2] )
+   );
 }
 
 
