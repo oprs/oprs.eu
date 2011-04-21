@@ -1,6 +1,8 @@
 #
 equiv a a
-#
+equiv ab ab
+equiv ab (a)b
+equiv ab a(b)
 equiv abc abc
 equiv abc (a)bc
 equiv abc a(b)c
@@ -10,6 +12,7 @@ equiv abc a(bc)
 equiv abc (abc)
 equiv abc (a)(bc)
 equiv abc (ab)(c)
+equiv abcd abcd
 equiv abcd (ab)cd
 equiv abcd a(bc)d
 equiv abcd ab(cd)
@@ -32,3 +35,7 @@ equiv a|b|c a|(b|c)
 equiv a* a**
 equiv a* (a)*
 equiv a* (a*)*
+equiv a* a*a*
+equiv a* (a*a*)*
+#
+equiv a+ aa*
