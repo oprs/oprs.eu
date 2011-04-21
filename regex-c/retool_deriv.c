@@ -45,7 +45,7 @@ retool_deriv( int argc, char* argv[] )
    char *x = argv[2];
 
    while( *x ) {
-      (void)printf( "'%c' - ", *x );
+      (void)printf( "'%c': ", *x );
       atom = brz_deriv( atom, *x );
       re_posix_dump( atom );
       if( truep( atom ) || nullp( atom ) ) break;

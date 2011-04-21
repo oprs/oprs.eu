@@ -42,6 +42,7 @@ struct cmd_s cv[] = {
    { "echo",  retool_echo  },
    { "equiv", retool_equiv },
    { "deriv", retool_deriv },
+   { "match", retool_match },
    { 0,       0            }
 };
 

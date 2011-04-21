@@ -43,5 +43,31 @@ equiv a* (a)*
 equiv a* (a*)*
 equiv a* a*a*
 equiv a* (a*a*)*
+equiv ab*c a(b*)c
+equiv ab*c a(b*c)
 #
 equiv a+ aa*
+equiv a+ a*a
+equiv a+b aa*b
+equiv a+b a*ab
+#
+match a a
+match ab ab
+match abc abc
+match abcd abcd
+match a|b a
+match a|b b
+match a|b|c a
+match a|b|c b
+match a|b|c c
+match (a|b)c ac
+match (a|b)c bc
+match a(b|c) ab
+match a(b|c) ac
+match ab|bc ab
+match ab|bc bc
+match a*b b
+match a*b ab
+match a*b aab
+match a+b ab
+match a+b aab

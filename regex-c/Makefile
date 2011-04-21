@@ -4,7 +4,7 @@ LDFLAGS =
 CC = gcc
 
 OBJ = lisp.o regex.o regex_posix_parse.o regex_posix_dump.o brzozowski.o
-RETOOL_OBJ = retool_dump.o retool_echo.o retool_equiv.o retool_deriv.o retool.o
+RETOOL_OBJ = retool_dump.o retool_echo.o retool_equiv.o retool_deriv.o retool_match.o retool.o
 
 default: retool
 
