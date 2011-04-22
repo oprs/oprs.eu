@@ -50,7 +50,7 @@ retool_match( int argc, char* argv[] )
       ++x;
    }
 
-   return !truep( atom );
+   return !(truep( atom ) || brz_is_nullable( atom ));
 }
 
 

@@ -28,6 +28,7 @@
 #include <stdio.h>
 
 #include "regex_posix.h"
+#include "brzozowski.h"
 
 
 static void
@@ -113,7 +114,7 @@ re_posix_dump_r( atom_t atom )
 void
 re_posix_dump( atom_t atom )
 {
-   if( truep( atom ) ) {
+   if( truep( atom ) || brz_is_nullable( atom ) ) {
       (void)printf( "MATCH\n" );
    } else if( nullp( atom ) ) {
       (void)printf( "FAIL\n" );
