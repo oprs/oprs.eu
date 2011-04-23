@@ -53,6 +53,7 @@ re_posix_quoted( re_mbuf_t* mbuf )
    switch( c ) {
       case '\0': return nil;
       case '\\': atom = ATOM_CHAR(  '\\'  ); break;  /* backslash */
+      case '.' : atom = ATOM_CHAR(   '.'  ); break;  /* dot       */
       case '0' : atom = ATOM_CHAR( '\x00' ); break;  /* null      */
       case 'a' : atom = ATOM_CHAR( '\x07' ); break;  /* bell      */
       case 'b' : atom = ATOM_CHAR( '\x08' ); break;  /* backspace */
