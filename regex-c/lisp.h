@@ -66,9 +66,11 @@ static inline int integerp( atom_t atom )   { return (atom.x & TAG_MASK) == ATAG
 static inline int characterp( atom_t atom ) { return (atom.x & TAG_MASK) == ATAG_CHAR; }
 
 extern int equalp( atom_t a0, atom_t a1 );
+extern int position( atom_t a0, atom_t a1 );
 
 extern atom_t cons( atom_t car, atom_t cdr );
 extern atom_t list( atom_t car, ... );
+extern atom_t append( atom_t a0, atom_t a1 );
 
 static inline atom_t list2( atom_t a0, atom_t a1 )
 { return cons( a0, cons( a1, nil )); }

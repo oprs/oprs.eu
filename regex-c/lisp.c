@@ -106,11 +106,48 @@ equalp( atom_t a0, atom_t a1 )
    if( (a0.x & TAG_MASK) != (a1.x & TAG_MASK) )
       return 0;
 
-   if( consp( a0 ) ) // a1 always a cons due to test above
+   if( consp( a0 ) ) {
+      if( nullp(a1) ) return 0;
       return( equalp( car(a0), car(a1) )
            && equalp( cdr(a0), cdr(a1) ));
+   }
 
    return( a0.x == a1.x );
+}
+
+
+int
+position( atom_t atom, atom_t list )
+{
+   int i;
+
+   if( nullp(list) )
+      return -1;
+
+   assert( consp(list) );
+
+   for( i = 0 ; !nullp(list) ; ++i, list = cdr(list) )
+      if( equalp( atom, car(list) )) return i;
+
+   return -1;
+}
+
+
+atom_t
+append( atom_t list, atom_t atom )
+{
+   if( nullp(list) )
+      return cons( atom, nil );
+
+   assert( consp(list) );
+
+   atom_t l1 = list;
+   while( !nullp(cdr(l1)) )
+      l1 = cdr(l1);
+
+   l1.c->cdr = cons( atom, nil );
+
+   return list;
 }
 
 
