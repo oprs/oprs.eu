@@ -28,7 +28,7 @@
 #ifndef _EU_OPRS_REGEX_H
 #define _EU_OPRS_REGEX_H
 
-#include "lisp.h"
+#include "ulisp.h"
 
 
 #define RE_SYM_SEQ ATOM_SYM(0)
