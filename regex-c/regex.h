@@ -31,10 +31,10 @@
 #include "ulisp.h"
 
 
-#define RE_SYM_SEQ ATOM_SYM(0)
-#define RE_SYM_ALT ATOM_SYM(1)
-#define RE_SYM_REP ATOM_SYM(2)
-#define RE_SYM_ANY ATOM_SYM(3)
+#define RE_SYM_SEQ ULISP_USYM(0)
+#define RE_SYM_ALT ULISP_USYM(1)
+#define RE_SYM_REP ULISP_USYM(2)
+#define RE_SYM_ANY ULISP_USYM(3)
 
 
 struct re_mbuf {

@@ -54,7 +54,7 @@ atom_t
 brz_deriv( atom_t atom, int c )
 {
    if( characterp(atom) )
-      return PREDICATE( equalp(atom, ATOM_CHAR(c)) );
+      return PREDICATE( equalp(atom, ULISP_CHAR(c)) );
 
    if( re_is_seq(atom) )
       return re_alt(

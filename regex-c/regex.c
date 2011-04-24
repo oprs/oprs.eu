@@ -65,9 +65,11 @@ re_alt( atom_t a0, atom_t a1 )
    if( equalp(a0, a1) )
       return a0;
 
+/*
    if( ((a0.x & TAG_MASK) == (a1.x & TAG_MASK))
     && ( a0.x > a1.x ) )
       return list3( RE_SYM_ALT, a1, a0 );
+*/
 
    return list3( RE_SYM_ALT, a0, a1 );
 }

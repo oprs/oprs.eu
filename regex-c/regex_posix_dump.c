@@ -102,7 +102,7 @@ re_posix_dump_r( atom_t atom )
       return;
    }
 
-   int c = atom.x >> TAG_SHIFT;
+   int c = atom.x >> ULISP_OBJ_SHIFT;
    if( (c >= 32) && (c < 0x80) ) {
       (void)printf( "%c", c );
    } else {

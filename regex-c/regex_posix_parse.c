@@ -52,17 +52,17 @@ re_posix_quoted( re_mbuf_t* mbuf )
 
    switch( c ) {
       case '\0': return nil;
-      case '\\': atom = ATOM_CHAR(  '\\'  ); break;  /* backslash */
-      case '.' : atom = ATOM_CHAR(   '.'  ); break;  /* dot       */
-      case '0' : atom = ATOM_CHAR( '\x00' ); break;  /* null      */
-      case 'a' : atom = ATOM_CHAR( '\x07' ); break;  /* bell      */
-      case 'b' : atom = ATOM_CHAR( '\x08' ); break;  /* backspace */
-      case 't' : atom = ATOM_CHAR( '\x09' ); break;  /* tab       */
-      case 'n' : atom = ATOM_CHAR( '\x0a' ); break;  /* newline   */
-      case 'v' : atom = ATOM_CHAR( '\x0b' ); break;  /* vtab      */
-      case 'f' : atom = ATOM_CHAR( '\x0c' ); break;  /* page      */
-      case 'r' : atom = ATOM_CHAR( '\x0d' ); break;  /* return    */
-      default  : atom = re_seq( ATOM_CHAR( '\\' ), ATOM_CHAR( c ) );
+      case '\\': atom = ULISP_CHAR(  '\\'  ); break;  /* backslash */
+      case '.' : atom = ULISP_CHAR(   '.'  ); break;  /* dot       */
+      case '0' : atom = ULISP_CHAR( '\x00' ); break;  /* null      */
+      case 'a' : atom = ULISP_CHAR( '\x07' ); break;  /* bell      */
+      case 'b' : atom = ULISP_CHAR( '\x08' ); break;  /* backspace */
+      case 't' : atom = ULISP_CHAR( '\x09' ); break;  /* tab       */
+      case 'n' : atom = ULISP_CHAR( '\x0a' ); break;  /* newline   */
+      case 'v' : atom = ULISP_CHAR( '\x0b' ); break;  /* vtab      */
+      case 'f' : atom = ULISP_CHAR( '\x0c' ); break;  /* page      */
+      case 'r' : atom = ULISP_CHAR( '\x0d' ); break;  /* return    */
+      default  : atom = re_seq( ULISP_CHAR( '\\' ), ULISP_CHAR( c ) );
    }
 
    return atom;
@@ -89,7 +89,7 @@ re_posix_parse_r( re_mbuf_t* mbuf, int is_sub )
          case '|' : atom = re_alt( atom, re_posix_closure( mbuf, re_posix_parse_r( mbuf, 0 ) )); break;
          case '(' : atom = re_seq( atom, re_posix_closure( mbuf, re_posix_parse_r( mbuf, 1 ) )); break;
          case '.' : atom = re_seq( atom, re_posix_closure( mbuf, RE_SYM_ANY                  )); break;
-         default  : atom = re_seq( atom, re_posix_closure( mbuf, ATOM_CHAR(c)                )); break;
+         default  : atom = re_seq( atom, re_posix_closure( mbuf, ULISP_CHAR(c)               )); break;
       }
 
       c = MBUF_PEEK( mbuf );

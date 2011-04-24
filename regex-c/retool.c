@@ -30,6 +30,7 @@
 #include <string.h>
 
 #include "retool.h"
+#include "ulisp.h"
 
 
 struct cmd_s {
@@ -59,8 +60,11 @@ main( int argc, char *argv[] )
    }
 
    for( i = 0 ; cv[i].cmd ; ++i )
-      if( !strcmp( cv[i].cmd, argv[1] ) )
-         return cv[i].cfn( argc-1, argv+1 );
+      if( !strcmp( cv[i].cmd, argv[1] ) ) {
+         int rv = cv[i].cfn( argc-1, argv+1 );
+         pool_free();
+         return rv;
+      }
 
    (void)fprintf( stderr, "unknown command \"%s\"\n", argv[1] );
    return 1;
