@@ -62,7 +62,7 @@ main( int argc, char *argv[] )
    for( i = 0 ; cv[i].cmd ; ++i )
       if( !strcmp( cv[i].cmd, argv[1] ) ) {
          int rv = cv[i].cfn( argc-1, argv+1 );
-         pool_free();
+         // pool_free();
          return rv;
       }
 
