@@ -37,6 +37,7 @@
 #define RE_SYM_ANY ULISP_USYM(3)
 
 
+/*
 struct re_mbuf {
    const char *x;
    int         i;
@@ -47,6 +48,7 @@ typedef struct re_mbuf re_mbuf_t;
 #define MBUF_PULL( m ) ((m)->x[((m)->i)++])
 #define MBUF_PEEK( m ) ((m)->x[ (m)->i   ])
 #define MBUF_SKIP( m ) (void)( ((m)->i)++ )
+*/
 
 static inline int re_is_eps( atom_t atom ) { return equalp( atom, t ); }
 static inline int re_is_any( atom_t atom ) { return equalp( atom, RE_SYM_ANY ); }

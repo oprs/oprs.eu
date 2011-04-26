@@ -29,7 +29,7 @@
 
 
 static atom_t
-re_posix_closure( re_mbuf_t* mbuf, atom_t atom )
+re_posix_closure( mbuf_t* mbuf, atom_t atom )
 {
    int c = MBUF_PEEK( mbuf );
 
@@ -45,7 +45,7 @@ re_posix_closure( re_mbuf_t* mbuf, atom_t atom )
 
 
 static atom_t
-re_posix_quoted( re_mbuf_t* mbuf )
+re_posix_quoted( mbuf_t* mbuf )
 {
    atom_t atom;
    int c = MBUF_PULL( mbuf );
@@ -70,7 +70,7 @@ re_posix_quoted( re_mbuf_t* mbuf )
 
 
 static atom_t
-re_posix_parse_r( re_mbuf_t* mbuf, int is_sub )
+re_posix_parse_r( mbuf_t* mbuf, int is_sub )
 {
    atom_t atom = t;
    int c = MBUF_PEEK( mbuf );
@@ -102,7 +102,7 @@ re_posix_parse_r( re_mbuf_t* mbuf, int is_sub )
 atom_t
 re_posix_parse( char* re )
 {
-   re_mbuf_t mbuf = { re, 0 };
+   MBUF_DECL( mbuf, re );
    return re_posix_parse_r( &mbuf, 0 );
 }
 

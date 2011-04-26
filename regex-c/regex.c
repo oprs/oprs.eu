@@ -95,8 +95,8 @@ re_is_equiv( atom_t a0, atom_t a1 )
 void
 re_dump( atom_t atom )
 {
-   const char* symtab[] = { "SEQ", "ALT", "REP", "ANY" };
-   dump( atom, symtab );
+//   const char* symtab[] = { "SEQ", "ALT", "REP", "ANY" };
+   dump( atom );
 }
 
 
