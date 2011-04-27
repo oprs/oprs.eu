@@ -116,7 +116,7 @@ re_posix_dump( atom_t atom )
 {
    if( truep( atom ) /*|| brz_is_nullable( atom )*/ ) {
       (void)printf( "MATCH\n" );
-   } else if( nullp( atom ) ) {
+   } else if( !atom ) {
       (void)printf( "FAIL\n" );
    } else {
       (void)printf( "\"" );

@@ -60,7 +60,7 @@ retool_dfa( int argc, char* argv[] )
    dv = list2( nil, atom );
    iv = cdr(dv);
 
-   for( i = 1 ; !nullp(iv) ; ++i ) {
+   for( i = 1 ; iv ; ++i ) {
       (void)printf( "% 4d: ", i );
       x = argv[2];
       while( *x ) {
@@ -80,8 +80,7 @@ retool_dfa( int argc, char* argv[] )
       (void)printf( "    " );
       re_posix_dump( atom );
       iv = cdr(iv);
-      if( nullp(iv) )
-         break;
+      if( !iv ) break;
       atom = car(iv);
    }
 

@@ -31,7 +31,7 @@
 atom_t
 re_seq( atom_t a0, atom_t a1 )
 {
-   if( nullp(a0) || nullp(a1) ) return nil;
+   if( !a0 || !a1 ) return nil;
    if( truep(a0) ) return a1;
    if( truep(a1) ) return a0;
 
@@ -59,8 +59,8 @@ re_seq( atom_t a0, atom_t a1 )
 atom_t
 re_alt( atom_t a0, atom_t a1 )
 {
-   if( nullp(a0) ) return a1;
-   if( nullp(a1) ) return a0;
+   if( !a0 ) return a1;
+   if( !a1 ) return a0;
 
    if( equalp(a0, a1) )
       return a0;
@@ -78,7 +78,7 @@ re_alt( atom_t a0, atom_t a1 )
 atom_t
 re_rep( atom_t atom )
 {
-   if( nullp(atom) || truep(atom) ) return t;
+   if( !atom || truep(atom) ) return t;
 
    if( re_is_rep(atom) )
       return re_rep( cadr(atom) );

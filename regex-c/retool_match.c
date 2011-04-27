@@ -46,7 +46,7 @@ retool_match( int argc, char* argv[] )
 
    while( *x ) {
       atom = brz_deriv( atom, *x );
-      if( truep( atom ) || nullp( atom ) ) break;
+      if( !atom || truep( atom )) break;
       ++x;
    }
 
