@@ -1,22 +1,61 @@
 
-(defparameter *tokens* (make-hash-table))
+(defparameter *lexemes* (make-hash-table))
+(defparameter *tokens*  (make-hash-table))
 
-(defmacro token (label args)
- `(setf (gethash ',label *tokens*) ',args))
+(defmacro lexeme (label atom)
+ `(setf (gethash ',label *lexemes*) ',atom))
 
-;(load (merge-pathnames "c-grammar" *load-truename*))
+(defmacro token (label atom)
+ `(setf (gethash ',label *tokens*) ',atom))
 
-(defun dump-token (atom)
-  (let ((val (gethash atom *tokens*)))
-;(format t "~s: ~s~%" atom val)
-      (if (null val)
-        (error "undefined lexem ~s" atom)
-        (dump val))))
 
-(defun dump (atom)
+(defun is-seq     (atom) (and (consp atom) (eq (car atom) 'seq)))
+(defun is-alt     (atom) (and (consp atom) (eq (car atom) 'alt)))
+(defun is-rep     (atom) (and (consp atom) (eq (car atom) 'rep)))
+(defun is-opt     (atom) (and (consp atom) (eq (car atom) 'opt)))
+(defun is-empty   (atom) (null atom))
+(defun is-epsilon (atom) (eq atom t))
+(defun is-any     (atom) (eq atom 'any))
+
+(defun expand-seq (atom)
   (cond
-    ((symbolp atom) (dump-token atom))
-    ((consp   atom) (nconc (cons (car atom) nil)
-                           (mapcar #'dump (cdr atom))))
-    (t        atom)))
+    ((>  (length atom) 2) (list 'seq (expand-tok (car atom)) (expand-seq (cdr  atom))))
+    ((eq (length atom) 2) (list 'seq (expand-tok (car atom)) (expand-tok (cadr atom))))
+    ((eq (length atom) 1) (expand-tok (cadr atom)))
+    (t (error "malformed sequence: ~s~%" atom))))
+
+(defun expand-alt (atom)
+  (cond
+    ((>  (length atom) 2) (list 'alt (expand-tok (car atom)) (expand-alt (cdr  atom))))
+    ((eq (length atom) 2) (list 'alt (expand-tok (car atom)) (expand-tok (cadr atom))))
+    (t (error "malformed sequence: ~s~%" atom))))
+
+(defun expand-str (atom)
+  (expand-seq (concatenate 'list atom)))
+
+(defun expand-lex (atom)
+  (let ((lexeme (gethash atom *lexemes*)))
+    (if lexeme (expand-tok lexeme)
+               (error "unknown lexeme ~s~%" atom))))
+
+(defun expand-tok (atom)
+;(format t "expanding ~s~%" atom)
+  (cond
+    ((is-seq     atom) (expand-seq (cdr atom)))
+    ((is-alt     atom) (expand-alt (cdr atom)))
+    ((is-rep     atom) (list 'rep (expand-tok (cadr atom))))
+    ((is-opt     atom) (list 'opt (expand-tok (cadr atom))))
+    ((stringp    atom) (expand-str atom))
+    ((symbolp    atom) (expand-lex atom))
+    ((characterp atom) atom)
+    (t (error "unsupported token type: ~s~%" atom))))
+
+(defun expand (atom)
+  (let ((token (gethash atom *tokens*)))
+    (if token (expand-tok token)
+              (expand-lex atom))))
+
+
+(load "c-tokens")
+(format t "~s~%" *tokens*)
 
